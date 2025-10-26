@@ -46,11 +46,11 @@ static/audio/*
 
 # Machine Learning Models
 *.h5
-!Medicinal_plant8_Not.h5  # Allow this specific model file
 *.keras
 *.pkl
 *.model
 *.weights
+model/*.h5
 model/*.keras
 model/*.pkl
 
