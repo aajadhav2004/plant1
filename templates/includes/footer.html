@@ -1,0 +1,56 @@
+<!-- Site Footer -->
+<footer class="site-footer">
+    <!-- Top Section with Brand and Quote -->
+    <div class="footer-top">
+        <div class="footer-brand">
+            <div class="brand-logo">
+                <i class="fas fa-leaf"></i>
+                <span>MediPlant</span>
+            </div>
+            <p class="brand-quote">"Harness the power of nature through intelligent plant recognition."</p>
+        </div>
+    </div>
+
+    <!-- Middle Section with Quick Links -->
+    <div class="footer-links">
+        <div class="footer-section">
+            <h3>Navigation</h3>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('index') }}">Identify</a></li>
+                <li><a href="{{ url_for('performance') }}">Performance</a></li>
+                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section">
+            <h3>Resources</h3>
+            <ul>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Use</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section">
+            <h3>Connect</h3>
+            <div class="social-links">
+                <a href="https://github.com/aajadhav2004" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/groups/4837208/" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="mailto:contact@mediplant.com">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Section with Copyright -->
+    <div class="footer-bottom">
+        <p>© {{ year }} Medicinal Plant Identifier · All rights reserved.</p>
+    </div>
+</footer>

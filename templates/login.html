@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Medicinal Plant Identifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+</head>
+
+<body>
+    {% include 'includes/header.html' %}
+
+    <div class="auth-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash-message {{ category }}">
+                {{ message }}
+                <span class="close-flash">&times;</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <div class="auth-card">
+            <h2>Login</h2>
+            <div id="error-message" class="error-message"></div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                    <div id="email-error" class="field-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                    <div id="password-error" class="field-error"></div>
+                </div>
+                <button type="submit" class="btn primary-btn">Login</button>
+            </form>
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <button id="google-login" class="btn google-btn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
+                Login with Google
+            </button>
+
+            <p class="auth-link">Don't have an account? <a href="/signup">Sign up</a></p>
+            <p class="auth-link"><a href="#" id="forgot-password">Forgot Password?</a></p>
+
+            <!-- Reset Password Modal -->
+            <div id="reset-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h3>Reset Password</h3>
+                    <p>Enter your email address to receive a password reset link.</p>
+                    <div id="reset-error" class="error-message"></div>
+                    <div id="reset-success" class="success-message"></div>
+                    <div class="form-group">
+                        <label for="reset-email">Email</label>
+                        <input type="email" id="reset-email" required>
+                    </div>
+                    <button id="send-reset" class="btn primary-btn">Send Reset Link</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle flash message dismissal
+        document.addEventListener('DOMContentLoaded', function () {
+            const closeButtons = document.querySelectorAll('.close-flash');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const flashMessage = this.parentElement;
+                    flashMessage.style.animation = 'fadeOut 0.5s ease forwards';
+                    setTimeout(() => {
+                        flashMessage.remove();
+                    }, 500);
+                });
+            });
+
+            // Auto-dismiss flash messages after 5 seconds
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(message => {
+                setTimeout(() => {
+                    if (message && message.parentElement) {
+                        message.style.animation = 'fadeOut 0.5s ease forwards';
+                        setTimeout(() => {
+                            if (message && message.parentElement) {
+                                message.remove();
+                            }
+                        }, 500);
+                    }
+                }, 5000);
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/firebase.js') }}">
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Login form submission
+            document.getElementById('login-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                loginWithEmailPassword(email, password);
+            });
+
+            // Google login
+            document.getElementById('google-login').addEventListener('click', function (e) {
+                e.preventDefault();
+                googleSignIn(e);
+            });
+
+            // Reset Password Modal
+            const modal = document.getElementById('reset-modal');
+            const forgotPasswordLink = document.getElementById('forgot-password');
+            const closeModal = document.querySelector('.close-modal');
+            const sendResetBtn = document.getElementById('send-reset');
+            const resetErrorElement = document.getElementById('reset-error');
+            const resetSuccessElement = document.getElementById('reset-success');
+
+            // Open modal
+            forgotPasswordLink.addEventListener('click', function (e) {
+                e.preventDefault();
+                // Clear previous messages
+                resetErrorElement.textContent = '';
+                resetSuccessElement.textContent = '';
+                document.getElementById('reset-email').value = '';
+                modal.style.display = 'block';
+            });
+
+            // Close modal
+            closeModal.addEventListener('click', function () {
+                modal.style.display = 'none';
+            });
+
+            // Close modal when clicking outside
+            window.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            // Send password reset email
+            sendResetBtn.addEventListener('click', function () {
+                const email = document.getElementById('reset-email').value.trim();
+
+                // Clear previous messages
+                resetErrorElement.textContent = '';
+                resetSuccessElement.textContent = '';
+
+                // Validate email
+                if (!email) {
+                    resetErrorElement.textContent = 'Please enter your email address';
+                    return;
+                }
+
+                // Show loading state
+                sendResetBtn.disabled = true;
+                sendResetBtn.textContent = 'Sending...';
+
+                // Send reset email
+                sendPasswordResetEmail(email)
+                    .then((message) => {
+                        resetSuccessElement.textContent = message;
+                        resetSuccessElement.style.display = 'block';
+                        sendResetBtn.textContent = 'Send Reset Link';
+                        sendResetBtn.disabled = false;
+
+                        // Auto close modal after 3 seconds
+                        setTimeout(function () {
+                            modal.style.display = 'none';
+                        }, 3000);
+                    })
+                    .catch((error) => {
+                        resetErrorElement.textContent = error.message;
+                        resetErrorElement.style.display = 'block';
+                        sendResetBtn.textContent = 'Send Reset Link';
+                        sendResetBtn.disabled = false;
+                    });
+            });
+            // No duplicate event listeners needed here - they are defined above
+        });
+    </script>
+</body>
+
+</html>

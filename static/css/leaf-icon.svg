@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <defs>
+    <linearGradient id="leafGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4CAF50" />
+      <stop offset="100%" stop-color="#2E7D32" />
+    </linearGradient>
+  </defs>
+  <g transform="translate(2, 2) scale(0.85)">
+    <!-- Main leaf shape -->
+    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.5 0 1-.05 1.5-.13C7.5 20.5 4.5 16 4.5 12c0-4 3-8.5 9-9.5C13 2.18 12.5 2 12 2z" fill="url(#leafGradient)" />
+    <!-- Leaf veins -->
+    <path d="M12 2c5.5 0 10 4.5 10 10s-4.5 10-10 10c-.5 0-1-.05-1.5-.13" fill="none" stroke="#1B5E20" stroke-width=".5" stroke-linecap="round" />
+    <path d="M13.5 2.5c-6 1-9 5.5-9 9.5 0 4 3 8.5 9 9.5" fill="none" stroke="#1B5E20" stroke-width=".5" stroke-linecap="round" />
+    <!-- Secondary veins -->
+    <path d="M7 12h10" stroke="#1B5E20" stroke-width=".4" stroke-linecap="round" opacity="0.6" />
+    <path d="M8 9h8" stroke="#1B5E20" stroke-width=".4" stroke-linecap="round" opacity="0.6" />
+    <path d="M8 15h8" stroke="#1B5E20" stroke-width=".4" stroke-linecap="round" opacity="0.6" />
+    <!-- Highlight -->
+    <path d="M6 8c3-3 7-3 10-1" fill="none" stroke="#FFFFFF" stroke-width=".5" stroke-linecap="round" opacity="0.4" />
+  </g>
+</svg>

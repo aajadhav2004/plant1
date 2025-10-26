@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="500" viewBox="0 0 700 500">
+  <!-- Background -->
+  <rect x="0" y="0" width="700" height="500" fill="white" />
+  
+  <!-- Grid lines -->
+  <g stroke="#e0e0e0" stroke-width="1">
+    <!-- Horizontal grid lines -->
+    <line x1="50" y1="50" x2="650" y2="50" />
+    <line x1="50" y1="100" x2="650" y2="100" />
+    <line x1="50" y1="150" x2="650" y2="150" />
+    <line x1="50" y1="200" x2="650" y2="200" />
+    <line x1="50" y1="250" x2="650" y2="250" />
+    <line x1="50" y1="300" x2="650" y2="300" />
+    <line x1="50" y1="350" x2="650" y2="350" />
+    <line x1="50" y1="400" x2="650" y2="400" />
+    <line x1="50" y1="450" x2="650" y2="450" />
+    
+    <!-- Vertical grid lines -->
+    <line x1="125" y1="50" x2="125" y2="450" />
+    <line x1="200" y1="50" x2="200" y2="450" />
+    <line x1="275" y1="50" x2="275" y2="450" />
+    <line x1="350" y1="50" x2="350" y2="450" />
+    <line x1="425" y1="50" x2="425" y2="450" />
+    <line x1="500" y1="50" x2="500" y2="450" />
+    <line x1="575" y1="50" x2="575" y2="450" />
+    <line x1="650" y1="50" x2="650" y2="450" />
+  </g>
+  
+  <!-- Y-axis labels -->
+  <g font-family="Arial" font-size="12" text-anchor="end" fill="#333">
+    <text x="45" y="455">0.5</text>
+    <text x="45" y="405">0.6</text>
+    <text x="45" y="355">0.7</text>
+    <text x="45" y="305">0.8</text>
+    <text x="45" y="255">0.9</text>
+    <text x="45" y="205">1.0</text>
+  </g>
+  
+  <!-- X-axis labels -->
+  <g font-family="Arial" font-size="12" text-anchor="middle" fill="#333">
+    <text x="125" y="470">1</text>
+    <text x="200" y="470">2</text>
+    <text x="275" y="470">3</text>
+    <text x="350" y="470">4</text>
+    <text x="425" y="470">5</text>
+    <text x="500" y="470">6</text>
+    <text x="575" y="470">7</text>
+    <text x="650" y="470">8</text>
+  </g>
+  
+  <!-- Axis titles -->
+  <text x="350" y="495" font-family="Arial" font-size="14" text-anchor="middle" fill="#333">Epochs</text>
+  <text x="15" y="250" font-family="Arial" font-size="14" text-anchor="middle" transform="rotate(-90, 15, 250)" fill="#333">Accuracy</text>
+  
+  <!-- Data lines -->
+  <!-- Validation/Test Accuracy (blue) -->
+  <polyline
+    fill="none"
+    stroke="#2980b9"
+    stroke-width="2"
+    points="
+      125,350 
+      200,300 
+      275,275 
+      350,250 
+      425,230 
+      500,220 
+      575,210 
+      650,205
+    "
+  />
+  
+  <!-- Training Accuracy (orange) -->
+  <polyline
+    fill="none"
+    stroke="#ff8c00"
+    stroke-width="2"
+    points="
+      125,400 
+      200,350 
+      275,300 
+      350,275 
+      425,250 
+      500,235 
+      575,225 
+      650,215
+    "
+  />
+  
+  <!-- Legend -->
+  <rect x="450" y="70" width="20" height="3" fill="#2980b9" />
+  <text x="475" y="73" font-family="Arial" font-size="12" fill="#333">Validation/Test Accuracy</text>
+  
+  <rect x="450" y="90" width="20" height="3" fill="#ff8c00" />
+  <text x="475" y="93" font-family="Arial" font-size="12" fill="#333">Training Accuracy</text>
+</svg>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Medicinal Plant Identifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+</head>
+
+<body>
+    {% include 'includes/header.html' %}
+
+    <div class="auth-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash-message {{ category }}">
+                {{ message }}
+                <span class="close-flash">&times;</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <div class="auth-card">
+            <h2>Sign Up</h2>
+            <div id="error-message" class="error-message"></div>
+
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" required>
+                    <div id="name-error" class="field-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                    <div id="email-error" class="field-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                    <div id="password-error" class="field-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" required>
+                    <div id="confirm-password-error" class="field-error"></div>
+                </div>
+                <button type="submit" class="btn primary-btn">Sign Up</button>
+            </form>
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <button id="google-signup" class="btn google-btn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
+                Sign up with Google
+            </button>
+
+            <p class="auth-link">Already have an account? <a href="/login">Login</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Handle flash message dismissal
+        document.addEventListener('DOMContentLoaded', function () {
+            const closeButtons = document.querySelectorAll('.close-flash');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const flashMessage = this.parentElement;
+                    flashMessage.style.animation = 'fadeOut 0.5s ease forwards';
+                    setTimeout(() => {
+                        flashMessage.remove();
+                    }, 500);
+                });
+            });
+
+            // Auto-dismiss flash messages after 5 seconds
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(message => {
+                setTimeout(() => {
+                    if (message && message.parentElement) {
+                        message.style.animation = 'fadeOut 0.5s ease forwards';
+                        setTimeout(() => {
+                            if (message && message.parentElement) {
+                                message.remove();
+                            }
+                        }, 500);
+                    }
+                }, 5000);
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/firebase.js') }}">
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Signup form submission
+            document.getElementById('signup-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+
+                // Clear all field errors first
+                const fieldErrors = document.querySelectorAll('.field-error');
+                fieldErrors.forEach(el => el.textContent = '');
+
+                // Check if passwords match
+                if (password !== confirmPassword) {
+                    const confirmPasswordError = document.getElementById('confirm-password-error');
+                    confirmPasswordError.textContent = 'Passwords do not match';
+                    return;
+                }
+
+                signupWithEmailPassword(email, password, name);
+            });
+
+            // Google signup
+            document.getElementById('google-signup').addEventListener('click', function (e) {
+                e.preventDefault();
+                googleSignIn(e);
+            });
+        });
+    </script>
+</body>
+
+</html>

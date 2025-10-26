@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicinal Plant Identifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+</head>
+
+<body>
+    {% include 'includes/header.html' %}
+    <style>
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 100%;
+            margin: 80px 0 0 0;
+            /* Increased margin-top for header */
+            overflow: hidden;
+            padding: 0 20px;
+        }
+
+        .main-content {
+            width: 500px;
+            flex-shrink: 0;
+            padding-right: 20px;
+        }
+
+        .chatbot-container {
+            flex: 1;
+            background-color: #f5f5f5;
+            border-left: 1px solid #ddd;
+            padding: 20px;
+            height: calc(100vh - 80px);
+            min-width: 300px;
+        }
+
+        .image-preview {
+            width: 180px;
+            height: 180px;
+            border-radius: 10px;
+            margin: 0 auto;
+        }
+    </style>
+    </head>
+
+    <body>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='css/leaf-icon.svg') }}" alt="Leaf Icon">
+                <h1>Medicinal Plant Identifier</h1>
+            </div>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('index') }}" class="nav-link active">Identify</a>
+                <a href="{{ url_for('performance') }}" class="nav-link">Performance</a>
+                <a href="{{ url_for('profile') }}" class="nav-link">Profile</a>
+                <button id="logout-btn" class="btn logout-btn">Logout</button>
+            </div>
+        </nav>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash-message {{ category }}">
+                {{ message }}
+                <span class="close-flash">&times;</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <div class="container">
+            <div class="main-content">
+                <h2>Identify Medicinal Plants</h2>
+                <p>Upload an image or take a photo to identify medicinal plants</p>
+
+                <div class="image-container">
+                    <div id="image-preview" class="image-preview">
+                        <div id="placeholder-text">Image will appear here</div>
+                        <img id="preview-image" src="" alt="" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <label for="file-upload" class="btn primary-btn">
+                        <span class="btn-icon">📁</span> Upload from Gallery
+                    </label>
+                    <input id="file-upload" type="file" accept="image/*" style="display: none;">
+
+                    <button id="webcam-btn" class="btn secondary-btn">
+                        <span class="btn-icon">📷</span> Capture from Webcam
+                    </button>
+                </div>
+
+                <div id="webcam-container" class="webcam-container" style="display: none;">
+                    <video id="webcam" autoplay playsinline></video>
+                    <div class="webcam-controls">
+                        <button id="capture-btn" class="btn primary-btn">Capture</button>
+                        <button id="close-webcam-btn" class="btn secondary-btn">Close</button>
+                    </div>
+                </div>
+
+                <button id="predict-btn" class="btn primary-btn" style="margin-top: 20px;">
+                    <span class="btn-icon">🔍</span> Predict Plant
+                </button>
+
+                <div id="result-container" class="result-container" style="display: none;">
+                    <h3>Prediction Result</h3>
+                    <div id="prediction-result" class="prediction-result"></div>
+                </div>
+            </div>
+
+            <div class="chatbot-container">
+                <div class="chat-header">
+                    <h2>💬 Medicinal Plant Chat</h2>
+                    <select id="language-select" class="language-select">
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी (Hindi)</option>
+                        <option value="mr">मराठी (Marathi)</option>
+                    </select>
+                </div>
+                <div id="plant-name"></div>
+                <div class="chat-box" id="chat-box"></div>
+
+                <div class="chat-input">
+                    <input type="text" id="question" placeholder="Ask about this plant...">
+                    <button id="voice-btn" class="voice-btn" title="Hold to speak">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button id="ask-btn" class="btn primary-btn">Ask</button>
+                </div>
+
+                <div class="chat-actions">
+                    <button id="download-btn" class="btn secondary-btn">Download Conversation</button>
+                    <button id="print-btn" class="btn secondary-btn">Print Conversation</button>
+                    <button id="share-btn" class="share-button" title="Share Conversation">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Share Popup -->
+        <div id="share-popup" class="share-popup">
+            <div class="share-popup-content">
+                <h3>Share Conversation</h3>
+                <div class="share-options">
+                    <button id="share-whatsapp" class="share-option-btn whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                        Share on WhatsApp
+                    </button>
+                    <button id="share-gmail" class="share-option-btn gmail">
+                        <i class="far fa-envelope"></i>
+                        Share via Gmail
+                    </button>
+                </div>
+                <button id="close-share-popup" class="close-popup">×</button>
+            </div>
+        </div>
+
+        <!-- Add Font Awesome for icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <script src="{{ url_for('static', filename='js/firebase.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/voice-chat.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/share.js') }}"></script>
+    </body>
+
+</html>

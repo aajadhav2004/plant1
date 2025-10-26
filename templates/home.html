@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Medicinal Plant Identification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation Header -->
+    <nav class="main-nav">
+        <div class="nav-brand">
+            <a href="{{ url_for('home') }}">
+                <i class="fas fa-leaf"></i>
+                <span>MediPlant</span>
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}" class="nav-item {% if request.endpoint == 'home' %}active{% endif %}">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="{{ url_for('index') }}" class="nav-item {% if request.endpoint == 'index' %}active{% endif %}">
+                <i class="fas fa-search"></i> Identify
+            </a>
+            <a href="{{ url_for('performance') }}"
+                class="nav-item {% if request.endpoint == 'performance' %}active{% endif %}">
+                <i class="fas fa-chart-line"></i> Performance
+            </a>
+            <a href="{{ url_for('profile') }}" class="nav-item {% if request.endpoint == 'profile' %}active{% endif %}">
+                <i class="fas fa-user"></i> Profile
+            </a>
+            <button onclick="logout()" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="flash-message {{ category }} fade-in">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-image">
+            <img src="{{ url_for('static', filename='/images/Medicinal-plant-banner-image.jpg') }}"
+                alt="Medicinal Plants">
+            <div class="hero-content">
+                <h1 class="fade-in">Discover the Power of Medicinal Plants</h1>
+                <p class="fade-in">Identify plants and explore their healing properties</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Introduction -->
+    <section class="intro slide-up">
+        <div class="container">
+            <p>Welcome to our advanced Medicinal Plant Identification platform, where cutting-edge AI technology meets
+                traditional healing wisdom. Our system helps you accurately identify medicinal plants and discover their
+                potential therapeutic properties, bridging the gap between nature's remedies and modern science.</p>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <div class="container">
+            <div class="feature-grid">
+                <div class="feature-card slide-up">
+                    <i class="fas fa-brain"></i>
+                    <h3>AI-powered Recognition</h3>
+                    <p>State-of-the-art machine learning algorithms for precise plant identification from your photos
+                    </p>
+                </div>
+                <div class="feature-card slide-up">
+                    <i class="fas fa-leaf"></i>
+                    <h3>Medicinal Insights</h3>
+                    <p>Comprehensive information about each plant's traditional uses and healing properties</p>
+                </div>
+                <div class="feature-card slide-up">
+                    <i class="fas fa-robot"></i>
+                    <h3>Gemini Chatbot</h3>
+                    <p>Interactive AI assistant to guide you through plant identification and provide detailed
+                        information</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta fade-in">
+        <div class="container">
+            <a href="{{ url_for('index') }}" class="cta-button">
+                Start Identifying Plants
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
+
+
+    <script>
+        // Handle logout
+        function logout() {
+            window.location.href = "{{ url_for('logout') }}";
+        }
+
+        // Handle flash messages
+        document.addEventListener('DOMContentLoaded', function () {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(message => {
+                setTimeout(() => {
+                    message.style.opacity = '0';
+                    setTimeout(() => {
+                        message.remove();
+                    }, 500);
+                }, 5000);
+            });
+        });
+
+        // Animation on scroll
+        function handleScroll() {
+            const elements = document.querySelectorAll('.slide-up, .fade-in');
+            elements.forEach(element => {
+                const position = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight * 0.8;
+
+                if (position < screenPosition) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('load', handleScroll);
+    </script>
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+
+    <script>
+        // Update footer year
+        document.querySelector('.footer-bottom').innerHTML =
+            document.querySelector('.footer-bottom').innerHTML.replace('{{ year }}', new Date().getFullYear());
+    </script>
+</body>
+
+</html>

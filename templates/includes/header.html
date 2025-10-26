@@ -1,0 +1,89 @@
+<!-- Navigation Header -->
+<nav class="main-nav">
+    <!-- Mobile menu toggle (visible on small screens) -->
+    <button id="nav-toggle" class="nav-toggle" aria-label="Open navigation menu">
+        <span class="hamburger"></span>
+    </button>
+    <div class="nav-brand">
+        <a href="{{ url_for('home') }}">
+            <i class="fas fa-leaf"></i>
+            <span>MediPlant</span>
+        </a>
+    </div>
+    <div class="nav-links">
+        {% if request.endpoint == 'login' %}
+        <a href="#" class="nav-item">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+        <a href="{{ url_for('signup') }}" class="nav-item">
+            <i class="fas fa-user-plus"></i> Sign Up
+        </a>
+        {% elif request.endpoint == 'signup' %}
+        <a href="{{ url_for('login') }}" class="nav-item">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-user-plus"></i> Sign Up
+        </a>
+        {% else %}
+        <a href="{{ url_for('home') }}" class="nav-item {% if request.endpoint == 'home' %}active{% endif %}">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a href="{{ url_for('index') }}" class="nav-item {% if request.endpoint == 'index' %}active{% endif %}">
+            <i class="fas fa-search"></i> Identify
+        </a>
+        <a href="{{ url_for('performance') }}"
+            class="nav-item {% if request.endpoint == 'performance' %}active{% endif %}">
+            <i class="fas fa-chart-line"></i> Performance
+        </a>
+        <a href="{{ url_for('profile') }}" class="nav-item {% if request.endpoint == 'profile' %}active{% endif %}">
+            <i class="fas fa-user"></i> Profile
+        </a>
+        <button onclick="logout()" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+        {% endif %}
+    </div>
+</nav>
+
+<!-- Mobile sidebar for navigation (hidden by default) -->
+<aside id="mobile-sidebar" class="mobile-sidebar" aria-hidden="true">
+    <div class="mobile-sidebar-content">
+        <button id="mobile-close" class="mobile-close" aria-label="Close navigation">&times;</button>
+        {% if request.endpoint == 'login' %}
+        <a href="#" class="nav-item">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+        <a href="{{ url_for('signup') }}" class="nav-item">
+            <i class="fas fa-user-plus"></i> Sign Up
+        </a>
+        {% elif request.endpoint == 'signup' %}
+        <a href="{{ url_for('login') }}" class="nav-item">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-user-plus"></i> Sign Up
+        </a>
+        {% else %}
+        <a href="{{ url_for('home') }}" class="nav-item {% if request.endpoint == 'home' %}active{% endif %}">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a href="{{ url_for('index') }}" class="nav-item {% if request.endpoint == 'index' %}active{% endif %}">
+            <i class="fas fa-search"></i> Identify
+        </a>
+        <a href="{{ url_for('performance') }}"
+            class="nav-item {% if request.endpoint == 'performance' %}active{% endif %}">
+            <i class="fas fa-chart-line"></i> Performance
+        </a>
+        <a href="{{ url_for('profile') }}" class="nav-item {% if request.endpoint == 'profile' %}active{% endif %}">
+            <i class="fas fa-user"></i> Profile
+        </a>
+        <button onclick="logout()" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+        {% endif %}
+    </div>
+</aside>
+
+<!-- Header script to handle mobile sidebar -->
+<script src="{{ url_for('static', filename='js/header.js') }}"></script>
